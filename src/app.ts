@@ -9,7 +9,7 @@ import multer from "config/multer";
 export async function createApp() {
   const serverOptions: fastify.ServerOptions = {
     // Logger only for production
-    logger: !!(process.env.NODE_ENV !== "development"),
+    logger: true || !!(process.env.NODE_ENV !== "development"),
     ignoreTrailingSlash: true
   };
 

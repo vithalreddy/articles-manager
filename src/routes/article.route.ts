@@ -1,4 +1,5 @@
 import multer from "config/multer";
+
 import * as articleCtrl from "controllers/article.controller";
 
 export default function(fastify, opts, next) {
@@ -36,7 +37,7 @@ export default function(fastify, opts, next) {
 
       const { title, description, readyForReview } = req.body;
 
-      const imageTempPath = req.file.path;
+      const imageTempPath = req.file ? req.file.path : null;
 
       const article = await articleCtrl.updateArticle(articleID, {
         title,
@@ -96,9 +97,9 @@ export default function(fastify, opts, next) {
     handler: async (req, reply) => {
       const { articleID } = req.params;
 
-      const stream = await articleCtrl.getArticleImage(articleID);
+      const { stream, mimeType } = await articleCtrl.getArticleImage(articleID);
 
-      reply.send(stream);
+      reply.type(mimeType).send(stream);
     }
   });
 

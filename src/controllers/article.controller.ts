@@ -1,9 +1,10 @@
-import { copyFile, createReadStream } from "fs";
+import { copyFile, createReadStream, statSync } from "fs";
 import { promisify } from "util";
 
 import { getManager } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
-import { Boom } from "@hapi/boom";
+import * as boom from "@hapi/boom";
+import * as mime from "mime-types";
 
 import { Article, ArticleStatus } from "models/Article";
 import { connection as DBConn } from "models";
@@ -17,14 +18,12 @@ const IsDuplicateArticle = async title => {
   });
 
   if (IsDuplicate) {
-    throw new Boom(`Article with title: ${title} already exists.`, {
-      statusCode: 409
-    });
+    throw boom.conflict(`Article with title: ${title} already exists.`);
   }
 };
 
 const getImageURL = articleId => {
-  return `${SERVER_URL}/articles/${articleId}/image`;
+  return `${SERVER_URL}/api/v1/articles/${articleId}/image`;
 };
 
 export const createArticle = async ({ title, description, imageTempPath }) => {
@@ -59,9 +58,7 @@ export const updateArticle = async (
   let article = await DBConn.manager.findOne(Article, id);
 
   if (!article) {
-    throw new Boom(`Article with id: ${id} not found.`, {
-      statusCode: 404
-    });
+    throw boom.notFound(`Article with id: ${id} not found.`);
   }
 
   if (title) {
@@ -96,9 +93,7 @@ export const deleteArticle = async id => {
   let article = await DBConn.manager.findOne(Article, id);
 
   if (!article) {
-    throw new Boom(`Article with id: ${id} not found.`, {
-      statusCode: 404
-    });
+    throw boom.notFound(`Article with id: ${id} not found.`);
   }
 
   await DBConn.manager.delete(Article, article.id);
@@ -111,22 +106,18 @@ export const listArticles = async ({
   page = 1
 }) => {
   if (page && isNaN(page)) {
-    throw new Boom("Page Number Must Be A Valid Number", { statusCode: 400 });
+    throw boom.badRequest("Page Number Must Be A Valid Number");
   }
 
   if (articlesPerPage && isNaN(articlesPerPage)) {
-    throw new Boom("Articles Per Page Must Be A Valid Number", {
-      statusCode: 400
-    });
+    throw boom.badRequest("Articles Per Page Must Be A Valid Number");
   }
 
   page = page || 1;
   articlesPerPage = articlesPerPage || 50;
 
   if (articlesPerPage > 50) {
-    throw new Boom("Articles Per Page Can't be greater than 50.", {
-      statusCode: 400
-    });
+    throw boom.badRequest("Articles Per Page Can't be greater than 50.");
   }
 
   const limit = articlesPerPage;
@@ -146,9 +137,7 @@ export const listArticles = async ({
   ]);
 
   if (!articles.length) {
-    throw new Boom("No Articles Not Found for This Query.", {
-      statusCode: 404
-    });
+    throw boom.notFound("No Articles Not Found for This Query.");
   }
 
   for (let i = 0; i < articles.length; i++) {
@@ -173,9 +162,7 @@ export const getArticle = async id => {
   });
 
   if (!article) {
-    throw new Boom(`Article with id: ${id} not found.`, {
-      statusCode: 404
-    });
+    throw boom.notFound(`Article with id: ${id} not found.`);
   }
 
   article.image = getImageURL(article.id);
@@ -189,10 +176,12 @@ export const getArticleImage = async id => {
   let article = await DBConn.manager.findOne(Article, id);
 
   if (!article) {
-    throw new Boom(`Article with id: ${id} not found.`, {
-      statusCode: 404
-    });
+    throw boom.notFound(`Article with id: ${id} not found.`);
   }
+  console.log("mimeType", id);
+  const mimeType = mime.lookup(article.image);
+  console.log("mimeType", mimeType);
+  const stream = createReadStream(article.image);
 
-  return createReadStream(article.image);
+  return { stream, mimeType };
 };
