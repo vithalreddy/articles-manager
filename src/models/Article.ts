@@ -51,8 +51,8 @@ export class Article {
   updateAt: Date;
 
   @OneToMany(
-    type => Comment,
-    comment => comment.article
+    type => Rating,
+    rating => rating.article
   )
   ratings: Rating[];
 }
