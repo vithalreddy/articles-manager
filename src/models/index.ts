@@ -17,7 +17,7 @@ export default async function connectDB() {
     password: DB_PASSWORD,
     database: DB,
     entities: [Article, Rating],
-    synchronize: true,
+    synchronize: true, // disable this in prod
     logging: false
   });
 
