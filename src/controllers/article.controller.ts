@@ -57,7 +57,8 @@ export const updateArticle = async (
     title = null,
     description = null,
     imageTempPath = null,
-    readyForReview = null
+    readyForReview = null,
+    isPrivate = true
   }
 ) => {
   let article = await DBConn.manager.findOne(Article, id);
@@ -75,6 +76,8 @@ export const updateArticle = async (
   }
 
   if (description) article.description = description;
+
+  article.isPrivate = isPrivate ? true : false;
 
   if (imageTempPath) {
     const imageDestPath = `uploads/${uuidv4()}.${

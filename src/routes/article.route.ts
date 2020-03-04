@@ -36,7 +36,7 @@ export default function(fastify, opts, next) {
     handler: async (req, reply) => {
       const { articleID } = req.params;
 
-      const { title, description, readyForReview } = req.body;
+      const { title, description, readyForReview, isPrivate } = req.body;
 
       const imageTempPath = req.file ? req.file.path : null;
 
@@ -44,7 +44,8 @@ export default function(fastify, opts, next) {
         title,
         description,
         imageTempPath,
-        readyForReview
+        readyForReview,
+        isPrivate: isPrivate == "true" ? true : false
       });
 
       reply.send(article);

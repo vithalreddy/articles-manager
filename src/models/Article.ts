@@ -39,6 +39,9 @@ export class Article {
   @Column({ nullable: false })
   postedBy: string;
 
+  @Column({ nullable: false })
+  isPrivate: boolean;
+
   @Column({
     type: "enum",
     enum: ArticleStatus,
