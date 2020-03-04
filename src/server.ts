@@ -1,7 +1,7 @@
 import { createApp } from "./app";
 import { FASTIFY_PORT } from "config";
 import connectToDB from "models";
-import { createArticle, listArticles } from "controllers/article.controller";
+import { createArticle, getArticle } from "controllers/article.controller";
 
 (async () => {
   await connectToDB();
@@ -17,6 +17,6 @@ import { createArticle, listArticles } from "controllers/article.controller";
   });
 
   setTimeout(() => {
-    listArticles({});
+    getArticle(76);
   }, 3000);
 })();

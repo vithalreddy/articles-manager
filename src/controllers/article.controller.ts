@@ -167,6 +167,24 @@ export const listArticles = async ({
   return data;
 };
 
+export const getArticle = async id => {
+  let article = await DBConn.manager.getRepository(Article).findOne(id, {
+    relations: ["ratings"]
+  });
+
+  if (!article) {
+    throw new Boom(`Article with id: ${id} not found.`, {
+      statusCode: 404
+    });
+  }
+
+  article.image = getImageURL(article.id);
+
+  console.log(article);
+
+  return article;
+};
+
 export const getArticleImage = async id => {
   let article = await DBConn.manager.findOne(Article, id);
 
