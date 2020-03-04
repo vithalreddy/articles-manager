@@ -103,5 +103,21 @@ export default function(fastify, opts, next) {
     }
   });
 
+  fastify.route({
+    method: "PUT",
+    url: "/:articleID/review",
+    handler: async (req, reply) => {
+      const { articleID } = req.params;
+      const { status } = req.body;
+      if (status != "reviewed" || status != "published") {
+        return reply.code(400).send({ message: "Invalid Article Status." });
+      }
+
+      const article = await articleCtrl.reviewArticle(articleID, { status });
+
+      reply.send(article);
+    }
+  });
+
   next();
 }

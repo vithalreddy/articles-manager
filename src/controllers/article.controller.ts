@@ -1,7 +1,6 @@
-import { copyFile, createReadStream, statSync } from "fs";
+import { copyFile, createReadStream, unlinkSync } from "fs";
 import { promisify } from "util";
 
-import { getManager } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import * as boom from "@hapi/boom";
 import * as mime from "mime-types";
@@ -97,6 +96,7 @@ export const deleteArticle = async id => {
   }
 
   await DBConn.manager.delete(Article, article.id);
+  unlinkSync(article.image);
 };
 
 export const listArticles = async ({
@@ -168,6 +168,26 @@ export const getArticle = async id => {
   article.image = getImageURL(article.id);
 
   console.log(article);
+
+  return article;
+};
+
+export const reviewArticle = async (id, { status }) => {
+  let article = await DBConn.manager.findOne(Article, id);
+
+  if (!article) {
+    throw boom.notFound(`Article with id: ${id} not found.`);
+  }
+
+  if (article.status != "under_review") {
+    throw boom.badRequest(`Article not eligible for review.`);
+  }
+
+  article.status = status;
+
+  article = await DBConn.manager.save(article);
+
+  article.image = getImageURL(article.id);
 
   return article;
 };

@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn
+} from "typeorm";
 
 import { IsInt, Min, Max } from "class-validator";
 
@@ -22,22 +29,16 @@ export class Rating {
   commentedBy: string;
 
   // timestamps!
-  @Column("timestamp", {
-    precision: 3,
-    default: () => "CURRENT_TIMESTAMP(3)"
-  })
+  @CreateDateColumn({ type: "timestamp" })
   createdAt: Date;
 
-  @Column("timestamp", {
-    precision: 3,
-    default: () => "CURRENT_TIMESTAMP(3)",
-    onUpdate: "CURRENT_TIMESTAMP(3)"
-  })
+  @UpdateDateColumn({ type: "timestamp" })
   updateAt: Date;
 
   @ManyToOne(
     type => Article,
-    article => article.ratings
+    article => article.ratings,
+    { onDelete: "CASCADE" }
   )
   article: Article;
 }
