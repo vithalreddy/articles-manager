@@ -1,6 +1,6 @@
 import { createConnection, Connection } from "typeorm";
 
-import { DB, DB_HOST, DB_PORT, DB_PASSWORD, DB_USERNAME } from "config";
+import { DB, DB_HOST, DB_PORT, DB_PASSWORD, DB_USERNAME } from "../config";
 
 import { Article } from "./Article";
 import { Rating } from "./Rating";

@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 import * as boom from "@hapi/boom";
 import * as mime from "mime-types";
 
-import { Article, ArticleStatus } from "models/Article";
-import { connection as DBConn } from "models";
-import { SERVER_URL } from "config";
+import { Article, ArticleStatus } from "../models/Article";
+import { connection as DBConn } from "../models";
+import { SERVER_URL } from "../config";
 
 const copyFilePromise = promisify(copyFile);
 

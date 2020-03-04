@@ -1,6 +1,6 @@
-import multer from "config/multer";
+import multer from "../config/multer";
 
-import * as articleCtrl from "controllers/article.controller";
+import * as articleCtrl from "../controllers/article.controller";
 
 export default function(fastify, opts, next) {
   fastify.route({

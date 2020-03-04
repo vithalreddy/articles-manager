@@ -1,6 +1,4 @@
-import multer from "config/multer";
-
-import * as ratingCtrl from "controllers/rating.controller";
+import * as ratingCtrl from "../controllers/rating.controller";
 
 export default function(fastify, opts, next) {
   fastify.route({

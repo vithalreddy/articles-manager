@@ -1,6 +1,6 @@
 import { createApp } from "./app";
-import { FASTIFY_PORT } from "config";
-import connectToDB from "models";
+import { FASTIFY_PORT } from "./config";
+import connectToDB from "./models";
 
 (async () => {
   await connectToDB();

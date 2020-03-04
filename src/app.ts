@@ -4,7 +4,7 @@ import * as fastify from "fastify";
 import { Server, IncomingMessage, ServerResponse } from "http";
 
 import registerRoutes from "./routes";
-import multer from "config/multer";
+import multer from "./config/multer";
 
 export async function createApp() {
   const serverOptions: fastify.ServerOptions = {

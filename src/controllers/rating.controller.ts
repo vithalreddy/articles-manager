@@ -1,10 +1,9 @@
 import * as boom from "@hapi/boom";
 
-import { Rating } from "models/Rating";
-import { Article } from "models/Article";
+import { Rating } from "../models/Rating";
+import { Article } from "../models/Article";
 import { getImageURL } from "./article.controller";
-
-import { connection as DBConn } from "models";
+import { connection as DBConn } from "../models";
 
 export const createRating = async (
   articleId,
