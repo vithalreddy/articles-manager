@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
+} from "typeorm";
 
 import { Rating } from "./Rating";
 
@@ -37,17 +44,10 @@ export class Article {
   status: ArticleStatus;
 
   // timestamps!
-  @Column("timestamp", {
-    precision: 3,
-    default: () => "CURRENT_TIMESTAMP(3)"
-  })
+  @CreateDateColumn({ type: "timestamp" })
   createdAt: Date;
 
-  @Column("timestamp", {
-    precision: 3,
-    default: () => "CURRENT_TIMESTAMP(3)",
-    onUpdate: "CURRENT_TIMESTAMP(3)"
-  })
+  @UpdateDateColumn({ type: "timestamp" })
   updateAt: Date;
 
   @OneToMany(

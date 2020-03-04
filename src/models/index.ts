@@ -5,7 +5,7 @@ import { DB, DB_HOST, DB_PORT, DB_PASSWORD, DB_USERNAME } from "config";
 import { Article } from "./Article";
 import { Rating } from "./Rating";
 
-let connection: Connection;
+export let connection: Connection;
 export default async function connectDB() {
   if (connection) return connection;
 
