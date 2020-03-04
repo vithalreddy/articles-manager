@@ -123,10 +123,19 @@ export const listArticles = async ({
   const limit = articlesPerPage;
   const offset = page * limit - limit;
 
-  const query = await DBConn.manager
+  let query = await DBConn.manager
     .createQueryBuilder()
     .select("article")
     .from(Article, "article");
+
+  let whereQuery = {
+    title: title || undefined,
+    status: status || undefined
+  };
+
+  if (title || status) {
+    query = query.where(whereQuery);
+  }
 
   const [articles, totalCount] = await Promise.all([
     query
