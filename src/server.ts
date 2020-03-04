@@ -10,13 +10,11 @@ import { createArticle, getArticle } from "controllers/article.controller";
   app.listen(FASTIFY_PORT);
   console.log(`🚀Fastify server running on port ${FASTIFY_PORT}`);
 
-  const article = await createArticle({
-    title: `tesstss2s1 ${new Date()}`,
-    description: "nsns naann",
-    imageTempPath: "/home/v/Pictures/Screenshot from 2020-02-26 13-42-15.png"
-  });
+  //   const article = await createArticle({
+  //     title: `tesstss2s1 ${new Date()}`,
+  //     description: "nsns naann",
+  //     imageTempPath: "/home/v/Pictures/Screenshot from 2020-02-26 13-42-15.png"
+  //   });
 
-  setTimeout(() => {
-    getArticle(76);
-  }, 3000);
+  getArticle(76);
 })();
