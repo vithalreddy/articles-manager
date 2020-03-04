@@ -8,9 +8,9 @@ export default function(fastify, opts, next) {
     url: "/",
     preHandler: multer.single("image"),
     handler: async (req, reply) => {
-      const { title, description } = req.body;
+      const { title, description, postedBy } = req.body;
 
-      if (!req.file || !title || !description) {
+      if (!req.file || !title || !description || !postedBy) {
         return reply
           .code(400)
           .send({ message: "Requried Fields are missing." });
@@ -21,7 +21,8 @@ export default function(fastify, opts, next) {
       const article = await articleCtrl.createArticle({
         title,
         description,
-        imageTempPath
+        imageTempPath,
+        postedBy
       });
 
       reply.send(article);
@@ -78,7 +79,7 @@ export default function(fastify, opts, next) {
     method: "GET",
     url: "/",
     handler: async (req, reply) => {
-      const { title, page, articlesPerPage, status } = req.query;
+      const { title, page, articlesPerPage, status, postedBy } = req.query;
 
       const data = await articleCtrl.listArticles({
         title,
@@ -108,8 +109,10 @@ export default function(fastify, opts, next) {
     url: "/:articleID/review",
     handler: async (req, reply) => {
       const { articleID } = req.params;
+
       const { status } = req.body;
-      if (status != "reviewed" || status != "published") {
+
+      if (status != "reviewed" && status != "published") {
         return reply.code(400).send({ message: "Invalid Article Status." });
       }
 

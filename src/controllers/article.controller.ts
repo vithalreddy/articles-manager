@@ -21,11 +21,16 @@ const IsDuplicateArticle = async title => {
   }
 };
 
-const getImageURL = articleId => {
+export const getImageURL = articleId => {
   return `${SERVER_URL}/api/v1/articles/${articleId}/image`;
 };
 
-export const createArticle = async ({ title, description, imageTempPath }) => {
+export const createArticle = async ({
+  title,
+  description,
+  imageTempPath,
+  postedBy
+}) => {
   let article = new Article();
   article.title = title.toLowerCase().trim();
   article.description = description;
@@ -38,6 +43,7 @@ export const createArticle = async ({ title, description, imageTempPath }) => {
   await copyFilePromise(imageTempPath, imageDestPath);
 
   article.image = imageDestPath;
+  article.postedBy = postedBy;
   article = await DBConn.manager.save(article);
 
   article.image = getImageURL(article.id);
@@ -75,8 +81,8 @@ export const updateArticle = async (
       imageTempPath.split(".").slice(-1)[0]
     }`;
     await copyFilePromise(imageTempPath, imageDestPath);
-
-    article.image = getImageURL(imageDestPath);
+    unlinkSync(article.image);
+    article.image = imageDestPath;
   }
 
   if (readyForReview) article.status = ArticleStatus.UNDER_REVIEW;
@@ -97,12 +103,14 @@ export const deleteArticle = async id => {
 
   await DBConn.manager.delete(Article, article.id);
   unlinkSync(article.image);
+  return;
 };
 
 export const listArticles = async ({
   articlesPerPage = 50,
   title = null,
   status = null,
+  postedBy = null,
   page = 1
 }) => {
   if (page && isNaN(page)) {
@@ -130,10 +138,11 @@ export const listArticles = async ({
 
   let whereQuery = {
     title: title || undefined,
-    status: status || undefined
+    status: status || undefined,
+    postedBy: postedBy || undefined
   };
 
-  if (title || status) {
+  if (title || status || postedBy) {
     query = query.where(whereQuery);
   }
 
@@ -176,8 +185,6 @@ export const getArticle = async id => {
 
   article.image = getImageURL(article.id);
 
-  console.log(article);
-
   return article;
 };
 
@@ -207,9 +214,7 @@ export const getArticleImage = async id => {
   if (!article) {
     throw boom.notFound(`Article with id: ${id} not found.`);
   }
-  console.log("mimeType", id);
   const mimeType = mime.lookup(article.image);
-  console.log("mimeType", mimeType);
   const stream = createReadStream(article.image);
 
   return { stream, mimeType };

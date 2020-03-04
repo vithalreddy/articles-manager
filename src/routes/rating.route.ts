@@ -5,12 +5,12 @@ import * as ratingCtrl from "controllers/rating.controller";
 export default function(fastify, opts, next) {
   fastify.route({
     method: "POST",
-    url: "/:articleID/comments",
+    url: "/:articleID/ratings",
     handler: async (req, reply) => {
       const { articleID } = req.params;
       const { comment, commentedBy, rating } = req.body;
 
-      if (!comment || !commentedBy) {
+      if (!commentedBy) {
         return reply
           .code(400)
           .send({ message: "Requried Fields are missing." });

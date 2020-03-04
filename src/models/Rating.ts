@@ -22,7 +22,7 @@ export class Rating {
   @Max(10)
   rating: number;
 
-  @Column()
+  @Column({ nullable: true })
   comment: string;
 
   @Column()

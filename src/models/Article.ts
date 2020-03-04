@@ -36,6 +36,9 @@ export class Article {
   @Column({ nullable: false })
   image: string;
 
+  @Column({ nullable: false })
+  postedBy: string;
+
   @Column({
     type: "enum",
     enum: ArticleStatus,
