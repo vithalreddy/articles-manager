@@ -86,7 +86,8 @@ export default function(fastify, opts, next) {
         title,
         page,
         articlesPerPage,
-        status
+        status,
+        postedBy
       });
 
       reply.send(data);
