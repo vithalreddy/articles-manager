@@ -39,7 +39,7 @@ export class Article {
   @Column({ nullable: false })
   postedBy: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: true })
   isPrivate: boolean;
 
   @Column({

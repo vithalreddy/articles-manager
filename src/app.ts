@@ -28,6 +28,9 @@ export async function createApp() {
       reply.code(error.output.statusCode).send(error.output.payload);
       return;
     }
+
+    console.error(error);
+    return reply.send({ error: true, message: error.message });
   });
 
   return app;
